@@ -21,6 +21,19 @@ struct uart_reg_map {
 /** @brief Enable  Bit for UART Config register */
 #define UART_EN (1 << 13)
 
+
+/** @brief Enable bit for UART Clock */
+#define RCC_EN (1 << 17)
+
+/** @brief USARTDIV value */
+#define USART_DIV 0000_0000_1000_1011
+
+/** @brief Transmitter enable */
+#define TRANSMITTER_EN (1 << 2)
+
+/** @brief Receiver enable */
+#define RECEIVER_EN (1 << 3)
+
 /**
  * @brief initializes UART to given baud rate with 8-bit word length, 1 stop bit, 0 parity bits
  *
@@ -32,6 +45,29 @@ void uart_polling_init (int baud){
 
     struct uart_reg_map *uart = UART2_BASE;
     uart->CR1 |= UART_EN;
+    uart->CR1 |= TRANSMITTER_EN;
+    uart->CR1 |= RECEIVER_EN;
+    uart->BRR |= baud;
+    struct rcc_reg_map *rcc = RCC_BASE;
+    rcc->apb1_lpenr |= RCC_EN;
+
+    gpio_port gpio_portTX = GPIO_A;
+    unsigned int numTX    = 2;
+    unsigned int modeTX   = MODE_ALT;
+    unsigned int otypeTX  = OUTPUT_PUSH_PULL;
+    unsigned int speedTX  = OUTPUT_SPEED_LOW;
+    unsigned int pupdTX   = PUPD_NONE;
+    unsigned int altTX    = ALT7;  
+    gpio_init(gpio_portTX, numTX, modeTX, otypeTX, speedTX, pupdTX, altTX);
+
+    gpio_port gpio_portRX = GPIO_A;
+    unsigned int numRX    = 3;
+    unsigned int modeRX   = MODE_ALT;
+    unsigned int otypeRX  = OUTPUT_OPEN_DRAIN;
+    unsigned int speedRX  = OUTPUT_SPEED_LOW;
+    unsigned int pupdRX   = PUPD_NONE;
+    unsigned int altRX    = ALT7;
+    gpio_init(gpio_portRX, numRX, modeRX, otypeRX, speedRX, pupdRX, altRX);
 
     return;
 }
