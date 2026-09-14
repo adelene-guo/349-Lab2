@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# brew install open-ocd
+
+STLINK_CFG_PATH=$(find "$(brew --cellar open-ocd)" -name "stlink.cfg")
+
+if [ -z "$STLINK_CFG_PATH" ]; then
+    echo "[osx_ocd] WARNING: stlink.cfg not found. Attempting to find stlink-v2-1.cfg..."
+    STLINK_CFG_PATH=$(find "$(brew --cellar open-ocd)" -name "stlink-v2-1.cfg")
+
+    if [ -z "$STLINK_CFG_PATH" ]; then
+        echo "[osx_ocd] ERROR: stlink.cfg not found!"
+        exit 1
+    fi
+fi
+
+STM32F4X_PATH=$(find "$(brew --cellar open-ocd)" -name "stm32f4x.cfg")
+
+if [ -z "$STM32F4X_PATH" ]; then
+    echo "[osx_ocd] ERROR: stm32f4x.cfg not found!"
+    exit 1
+fi
+
+openocd -f $STLINK_CFG_PATH -f $STM32F4X_PATH
