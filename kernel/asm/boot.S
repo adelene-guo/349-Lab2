@@ -12,9 +12,8 @@
 
 .global ivt
 ivt:
-@ TODO: add the stack and the reset handler addr here.
-.word   0                   /* stack top address */
-.word   0                   /* 1 Reset */
+.word   __msp_stack_top     /* stack top address */
+.word   _reset_             /* 1 Reset */
 .word   _nmi_               /* 2 NMI */
 .word   _hard_fault_        /* 3 Hard Fault */
 .word   _mm_fault_          /* 4 MM Fault */
@@ -135,11 +134,39 @@ _spi1_handler:
 .thumb_func
 .global _reset_
 _reset_:
-@ Write your boot loader here!
-@ The bkpt instruction puts a breakpoint that fires an exception that
-@ can be caught if a debugger is attached.
-  bl kernel_main
-  bkpt
+  start:
+    ldr r0, =_erodata //source = start of flash ro_data
+    ldr r1, =_k_data  //destination = start of SRAM data
+    ldr r2, =_u_edata //end of SRAM data
+
+    cmp r1, r2
+    beq bss           //if .data has size 0, skip
+
+  data_loop:
+    ldr r3, [r0], #4  //load ro_data then increment flash address
+    str r3, [r1], #4  //store data then increment SRAM address
+
+    cmp r1, r2
+    blt data_loop     //loop if not reached end of SRAM data
+
+  bss:
+    mov r0, #0        // r0 = 0
+    ldr r1, =_k_bss   // r1 = start addr of bss
+    ldr r2, =_u_ebss  // r2 = end addr of bss
+
+    cmp r1, r2        
+    beq stop          //if .bss has size 0, skip
+
+  bss_loop:
+    str r0, [r1], #4 // store 0 to SRAM mem then increment bss addr
+    cmp r1, r2        // compare current bss addr to end of bss addr
+    blt bss_loop      // if not reached yet, loop
+  
+  stop:   
+  @ The bkpt instruction puts a breakpoint that fires an exception that
+  @ can be caught if a debugger is attached.
+    bl kernel_main //branch to kernel_main
+    bkpt
 
 .thumb_func
 .global _sys_tick_asm_
