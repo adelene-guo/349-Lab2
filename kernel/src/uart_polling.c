@@ -34,6 +34,12 @@ struct uart_reg_map {
 /** @brief Receiver enable */
 #define RECEIVER_EN (1 << 3)
 
+/** @brief Transmit data register empty bit of CR */
+#define UART_SR_TXE (1 << 7)
+
+/** @brief Read data register not empty bit of CR */
+#define UART_SR_RXNE (1 << 5)
+
 /**
  * @brief initializes UART to given baud rate with 8-bit word length, 1 stop bit, 0 parity bits
  *
@@ -81,7 +87,7 @@ void uart_polling_put_byte (char c){
     (void) c;
 
     struct uart_reg_map *uart = UART2_BASE;
-    while (uart->SR[7] == 0) {};
+    while ((uart->SR & UART_SR_TXE) == 0) {};
     uart->DR = c;
     return;
 }
@@ -91,6 +97,6 @@ void uart_polling_put_byte (char c){
  */
 char uart_polling_get_byte () {
     struct uart_reg_map *uart = UART2_BASE;
-    while (uart->SR[5] == 0) {};
+    while ((uart->SR & UART_SR_RXNE) == 0) {};
     return uart->DR;
 }

@@ -8,6 +8,10 @@
 
 
 int kernel_main() {
+  uart_polling_init(USART_DIV);
+  uart_polling_put_byte(67);
+  uart_polling_get_byte();
+
   while(1);
 
   return 0;
