@@ -79,6 +79,10 @@ void uart_polling_init (int baud){
  */
 void uart_polling_put_byte (char c){
     (void) c;
+
+    struct uart_reg_map *uart = UART2_BASE;
+    while (uart->SR[7] == 0) {};
+    uart->DR = c;
     return;
 }
 
@@ -86,5 +90,7 @@ void uart_polling_put_byte (char c){
  * @brief receives a byte over UART
  */
 char uart_polling_get_byte () {
-    return 0;
+    struct uart_reg_map *uart = UART2_BASE;
+    while (uart->SR[5] == 0) {};
+    return uart->DR;
 }
