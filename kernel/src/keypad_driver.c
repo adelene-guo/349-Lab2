@@ -29,7 +29,7 @@ void keypad_init() {
     // Column 1
     gpio_port gpio_portCOL1 = KEYPAD_COL1_PORT;
     unsigned int numCOL1     = KEYPAD_COL1_PIN;
-    unsigned int modeCOL1    = MODE_INPUT;
+    unsigned int modeCOL1    = MODE_GP_OUTPUT;
     unsigned int otypeCOL1   = OUTPUT_PUSH_PULL;
     unsigned int speedCOL1   = OUTPUT_SPEED_LOW;
     unsigned int pupdCOL1    = PUPD_PULL_UP;
@@ -39,7 +39,7 @@ void keypad_init() {
     // Column 2
     gpio_port gpio_portCOL2 = KEYPAD_COL2_PORT;
     unsigned int numCOL2     = KEYPAD_COL2_PIN;
-    unsigned int modeCOL2    = MODE_INPUT;
+    unsigned int modeCOL2    = MODE_GP_OUTPUT;
     unsigned int otypeCOL2   = OUTPUT_PUSH_PULL;
     unsigned int speedCOL2   = OUTPUT_SPEED_LOW;
     unsigned int pupdCOL2    = PUPD_PULL_UP;
@@ -49,7 +49,7 @@ void keypad_init() {
     // Column 3
     gpio_port gpio_portCOL3 = KEYPAD_COL3_PORT;
     unsigned int numCOL3     = KEYPAD_COL3_PIN;
-    unsigned int modeCOL3    = MODE_INPUT;
+    unsigned int modeCOL3    = MODE_GP_OUTPUT;
     unsigned int otypeCOL3   = OUTPUT_PUSH_PULL;
     unsigned int speedCOL3   = OUTPUT_SPEED_LOW;
     unsigned int pupdCOL3    = PUPD_PULL_UP;
