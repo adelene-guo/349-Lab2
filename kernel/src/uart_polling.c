@@ -43,14 +43,14 @@ struct uart_reg_map {
  * @param baud Baud rate
  */
 void uart_polling_init (int baud){
-    (void) baud; /* This line is simply here to suppress the Unused Variable Error. */
-                 /* You should remove this line in your final implementation */
-
     struct uart_reg_map *uart = UART2_BASE;
+    uart->SR  |= UART_SR_TXE;
+    uart->SR  |= UART_SR_RXNE;
     uart->CR1 |= UART_EN;
     uart->CR1 |= TRANSMITTER_EN;
     uart->CR1 |= RECEIVER_EN;
     uart->BRR |= baud;
+    
     struct rcc_reg_map *rcc = RCC_BASE;
     rcc->apb1_lpenr |= RCC_EN;
 
@@ -81,8 +81,6 @@ void uart_polling_init (int baud){
  * @param c character to be sent
  */
 void uart_polling_put_byte (char c){
-    (void) c;
-
     struct uart_reg_map *uart = UART2_BASE;
     while ((uart->SR & UART_SR_TXE) == 0);
     uart->DR = c;
