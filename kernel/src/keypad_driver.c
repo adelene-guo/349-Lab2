@@ -109,15 +109,11 @@ int read_col() {
     gpio_port gpio_portCOL3 = KEYPAD_COL3_PORT;
     unsigned int numCOL3     = KEYPAD_COL3_PIN;
     
-    if (gpio_read(gpio_portCOL1, numCOL1)){
-        return 1;
-    } else if (gpio_read(gpio_portCOL2, numCOL2)){
-        return 2;
-    } else if (gpio_read(gpio_portCOL3, numCOL3)){
-        return 3;
-    } else {
-        return 0;
-    }
+    gpio_set(gpio_portCOL1, numCOL1);
+    gpio_set(gpio_portCOL2, numCOL2);
+    gpio_set(gpio_portCOL3, numCOL3);
+    
+    return 0;
 }
 
 int read_row() {

@@ -18,9 +18,8 @@ struct uart_reg_map {
 /** @brief Base address for UART2 */
 #define UART2_BASE  (struct uart_reg_map *) 0x40004400
 
-/** @brief Enable  Bit for UART Config register */
+/** @brief Enable bit for UART Config register */
 #define UART_EN (1 << 13)
-
 
 /** @brief Enable bit for UART Clock */
 #define RCC_EN (1 << 17)
@@ -43,16 +42,17 @@ struct uart_reg_map {
  * @param baud Baud rate
  */
 void uart_polling_init (int baud){
+    (void) baud; /* This line is simply here to suppress the Unused Variable Error. */
+                 /* You should remove this line in your final implementation */
+    struct rcc_reg_map *rcc = RCC_BASE;
+    rcc->apb1_enr |= RCC_EN;
+    
+    
     struct uart_reg_map *uart = UART2_BASE;
-    uart->SR  |= UART_SR_TXE;
-    uart->SR  |= UART_SR_RXNE;
     uart->CR1 |= UART_EN;
     uart->CR1 |= TRANSMITTER_EN;
     uart->CR1 |= RECEIVER_EN;
     uart->BRR |= baud;
-    
-    struct rcc_reg_map *rcc = RCC_BASE;
-    rcc->apb1_lpenr |= RCC_EN;
 
     gpio_port gpio_portTX = GPIO_A;
     unsigned int numTX    = 2;
@@ -81,6 +81,8 @@ void uart_polling_init (int baud){
  * @param c character to be sent
  */
 void uart_polling_put_byte (char c){
+    (void) c;
+
     struct uart_reg_map *uart = UART2_BASE;
     while ((uart->SR & UART_SR_TXE) == 0);
     uart->DR = c;
