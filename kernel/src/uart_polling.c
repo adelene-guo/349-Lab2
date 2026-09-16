@@ -25,9 +25,6 @@ struct uart_reg_map {
 /** @brief Enable bit for UART Clock */
 #define RCC_EN (1 << 17)
 
-/** @brief USARTDIV value */
-#define USART_DIV 0000_0000_1000_1011
-
 /** @brief Transmitter enable */
 #define TRANSMITTER_EN (1 << 2)
 
@@ -87,7 +84,7 @@ void uart_polling_put_byte (char c){
     (void) c;
 
     struct uart_reg_map *uart = UART2_BASE;
-    while ((uart->SR & UART_SR_TXE) == 0) {};
+    while ((uart->SR & UART_SR_TXE) == 0);
     uart->DR = c;
     return;
 }
@@ -97,6 +94,6 @@ void uart_polling_put_byte (char c){
  */
 char uart_polling_get_byte () {
     struct uart_reg_map *uart = UART2_BASE;
-    while ((uart->SR & UART_SR_RXNE) == 0) {};
+    while ((uart->SR & UART_SR_RXNE) == 0);
     return uart->DR;
 }

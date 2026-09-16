@@ -6,13 +6,18 @@
 #include <lcd_driver.h>
 #include <keypad_driver.h>
 
+/** @brief USARTDIV value */
+#define USART_DIV 0x8B
 
 int kernel_main() {
   uart_polling_init(USART_DIV);
-  uart_polling_put_byte(67);
-  uart_polling_get_byte();
 
-  while(1);
+  char c = 10;
+
+  while(1) {
+    uart_polling_put_byte(c);
+    c = uart_polling_get_byte();
+  }
 
   return 0;
 }

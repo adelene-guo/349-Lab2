@@ -4,26 +4,26 @@
 #include <keypad_driver.h>
 
 /** @brief Keypad pins for 3 columns and 4 rows */
-#define KEYPAD_COL1_PORT GPIO_C
-#define KEYPAD_COL1_PIN 7
+#define KEYPAD_COL1_PORT GPIO_B
+#define KEYPAD_COL1_PIN 0
 
-#define KEYPAD_COL2_PORT 
-#define KEYPAD_COL2_PIN
+#define KEYPAD_COL2_PORT GPIO_C
+#define KEYPAD_COL2_PIN 0
 
-#define KEYPAD_COL3_PORT
-#define KEYPAD_COL3_PIN
+#define KEYPAD_COL3_PORT GPIO_A
+#define KEYPAD_COL3_PIN  1
 
-#define KEYPAD_ROW1_PORT
-#define KEYPAD_ROW1_PIN
+#define KEYPAD_ROW1_PORT GPIO_C
+#define KEYPAD_ROW1_PIN  1
 
-#define KEYPAD_ROW2_PORT
-#define KEYPAD_ROW2_PIN 
+#define KEYPAD_ROW2_PORT GPIO_A
+#define KEYPAD_ROW2_PIN  10
 
-#define KEYPAD_ROW3_PORT
-#define KEYPAD_ROW3_PIN 
+#define KEYPAD_ROW3_PORT GPIO_A
+#define KEYPAD_ROW3_PIN  0
 
-#define KEYPAD_ROW4_PORT
-#define KEYPAD_ROW4_PIN 
+#define KEYPAD_ROW4_PORT GPIO_A
+#define KEYPAD_ROW4_PIN 4
 
 void keypad_init() {
     // Column 1
@@ -70,7 +70,7 @@ void keypad_init() {
     gpio_port gpio_portROW2 = KEYPAD_ROW2_PORT;
     unsigned int numROW2     = KEYPAD_ROW2_PIN;
     unsigned int modeROW2    = MODE_INPUT;
-    unsigned int otypeROWok2   = OUTPUT_PUSH_PULL;
+    unsigned int otypeROW2   = OUTPUT_PUSH_PULL;
     unsigned int speedROW2   = OUTPUT_SPEED_LOW;
     unsigned int pupdROW2    = PUPD_PULL_UP;
     unsigned int altROW2     = 0;
@@ -97,44 +97,6 @@ void keypad_init() {
     gpio_init(gpio_portROW4, numROW4, modeROW4, otypeROW4, speedROW4, pupdROW4, altROW4);
 
     return;
-}
-
-char keypad_read() {
-    int column_pressed = read_col();
-    int row_pressed = read_row();
-
-    if (column_pressed == 1){
-       if (row_pressed == 1){
-          return '1';
-       } else if (row_pressed == 2){
-          return '4';
-       } else if (row_pressed == 3){
-          return '7';
-       } else if (row_pressed == 4){
-          return '*';
-       }
-    } else if (column_pressed == 2){
-        if (row_pressed == 1){
-          return '2';
-       } else if (row_pressed == 2){
-          return '5';
-       } else if (row_pressed == 3){
-          return '8';
-       } else if (row_pressed == 4){
-          return '0';
-       }
-    } else if (column_pressed == 3){
-        if (row_pressed == 1){
-          return '3';
-       } else if (row_pressed == 2){
-          return '6';
-       } else if (row_pressed == 3){
-          return '9';
-       } else if (row_pressed == 4){
-          return '#';
-       }
-    }
-    return '\0';
 }
 
 int read_col() {
@@ -182,4 +144,42 @@ int read_row() {
     } else {
         return 0;
     }
+}
+
+char keypad_read() {
+    int column_pressed = read_col();
+    int row_pressed = read_row();
+
+    if (column_pressed == 1){
+       if (row_pressed == 1){
+          return '1';
+       } else if (row_pressed == 2){
+          return '4';
+       } else if (row_pressed == 3){
+          return '7';
+       } else if (row_pressed == 4){
+          return '*';
+       }
+    } else if (column_pressed == 2){
+        if (row_pressed == 1){
+          return '2';
+       } else if (row_pressed == 2){
+          return '5';
+       } else if (row_pressed == 3){
+          return '8';
+       } else if (row_pressed == 4){
+          return '0';
+       }
+    } else if (column_pressed == 3){
+        if (row_pressed == 1){
+          return '3';
+       } else if (row_pressed == 2){
+          return '6';
+       } else if (row_pressed == 3){
+          return '9';
+       } else if (row_pressed == 4){
+          return '#';
+       }
+    }
+    return '\0';
 }
