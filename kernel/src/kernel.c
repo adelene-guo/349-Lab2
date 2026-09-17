@@ -11,7 +11,7 @@
 
 int kernel_main() {
   uart_polling_init(USART_DIV);
-  printk("Hello World");
+  keypad_init();
 
   gpio_port gpio_portGreen = GPIO_A;
   unsigned int numGreen    = 8;
@@ -33,11 +33,36 @@ int kernel_main() {
   gpio_init(gpio_portRed, numRed, modeRed, otypeRed, speedRed, pupdRed, altRed);
   gpio_set(gpio_portRed, numRed);
 
-  char c;
+  gpio_port gpio_portButton1 = GPIO_A;
+  unsigned int numButton1    = 9;
+  unsigned int modeButton1   = MODE_INPUT;
+  unsigned int otypeButton1  = OUTPUT_PUSH_PULL;
+  unsigned int speedButton1  = OUTPUT_SPEED_LOW;
+  unsigned int pupdButton1   = PUPD_PULL_UP;
+  unsigned int altButton1    = ALT0;  
+  gpio_init(gpio_portButton1, numButton1, modeButton1, otypeButton1, speedButton1, pupdButton1, altButton1);
+  
+  gpio_port gpio_portButton2 = GPIO_C;
+  unsigned int numButton2    = 7;
+  unsigned int modeButton2   = MODE_INPUT;
+  unsigned int otypeButton2  = OUTPUT_PUSH_PULL;
+  unsigned int speedButton2  = OUTPUT_SPEED_LOW;
+  unsigned int pupdButton2   = PUPD_PULL_UP;
+  unsigned int altButton2    = ALT0;  
+  gpio_init(gpio_portButton2, numButton2, modeButton2, otypeButton2, speedButton2, pupdButton2, altButton2);
+
+  //char c;
 
   while(1) {
-    c = uart_polling_get_byte();
-    uart_polling_put_byte(c);
+    // gpio_set(gpio_portButton1, numButton1);
+    // int button1_pressed = gpio_read(gpio_portButton1, numButton1) == 0;
+    // printk("Button 1: %d \n", button1_pressed);
+    // int button2_pressed = gpio_read(gpio_portButton2, numButton2) == 0;
+    // printk("Button 2: %d \n", button2_pressed);
+    char key_read = keypad_read();
+    printk("Key pressed: %c \n", key_read);
+    //c = uart_polling_get_byte();
+    //uart_polling_put_byte(c);
   }
 
   return 0;
