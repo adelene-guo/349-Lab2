@@ -2,10 +2,9 @@
 
 @mainpage 349 Lab 2
 
-@author <Name> (andrewid)
-@author <Name> (andrewid)
+Adie Guo (adieg)
+Alexis Luo (alexisl)
 
-Any additional comments you want to make can go here.  Did you like the
-project?  Was it too hard, too easy? Well, you get the idea.
+We learned a lot about GPIO and pull up/down resistors!
 
 */
