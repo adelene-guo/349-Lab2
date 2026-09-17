@@ -112,21 +112,24 @@ int read_row() {
     gpio_port gpio_portROW4 = KEYPAD_ROW4_PORT;
     unsigned int numROW4     = KEYPAD_ROW4_PIN;
 
-    int row_pressed = 0;
+    int row_pressed;
 
     if (gpio_read(gpio_portROW1, numROW1)){
+        for (int i=0; i < 15000; i++);
         row_pressed = 1;
     } else if (gpio_read(gpio_portROW2, numROW2)){
+        for (int i=0; i < 15000; i++);
         row_pressed = 2;
     } else if (gpio_read(gpio_portROW3, numROW3)){
+        for (int i=0; i < 15000; i++);
         row_pressed = 3;
     } else if (gpio_read(gpio_portROW4, numROW4)){
+        for (int i=0; i < 15000; i++);
         row_pressed = 4;
     } else {
         row_pressed = 0;
     }
 
-    for (int i=0; i < 50000; i++);
     return row_pressed;
 }
 
@@ -141,15 +144,21 @@ char keypad_read( ){
     unsigned int numCOL3     = KEYPAD_COL3_PIN;
     
     gpio_set(gpio_portCOL1, numCOL1);
+    gpio_clr(gpio_portCOL2, numCOL2);
+    gpio_clr(gpio_portCOL3, numCOL3);
     int row_pressed = read_row();
-    int row_pressed_1 = 0;
-    int row_pressed_2 = 0;
+
+    for (int i=0; i < 30000; i++);
+
+    int row_pressed_1;
+    int row_pressed_2;
 
     char key_pressed = '\0';
 
     if (row_pressed == 0){
         gpio_clr(gpio_portCOL1, numCOL1);
         gpio_set(gpio_portCOL2, numCOL2);
+        gpio_clr(gpio_portCOL3, numCOL3);
         row_pressed_1 = read_row();
     } else {
         if (row_pressed == 1){
@@ -163,7 +172,10 @@ char keypad_read( ){
        }
     }
 
+    for (int i=0; i < 30000; i++);
+
     if (row_pressed_1 == 0){
+        gpio_clr(gpio_portCOL1, numCOL1);
         gpio_clr(gpio_portCOL2, numCOL2);
         gpio_set(gpio_portCOL3, numCOL3);
         row_pressed_2 = read_row();
@@ -178,8 +190,12 @@ char keypad_read( ){
           key_pressed = '0';
        }
     }
+
+    for (int i=0; i < 30000; i++);
     
     if (row_pressed_2 == 0){
+        gpio_clr(gpio_portCOL1, numCOL1);
+        gpio_clr(gpio_portCOL2, numCOL2);
         gpio_clr(gpio_portCOL3, numCOL3);
         key_pressed = '\0';
     } else{
@@ -194,6 +210,6 @@ char keypad_read( ){
        }
     }
 
-    // for (int i=0; i < 50000; i++);
+    for (int i=0; i < 30000; i++);
     return key_pressed;
 }
