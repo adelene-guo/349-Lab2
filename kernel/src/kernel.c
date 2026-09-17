@@ -52,17 +52,24 @@ int kernel_main() {
   gpio_init(gpio_portButton2, numButton2, modeButton2, otypeButton2, speedButton2, pupdButton2, altButton2);
 
   //char c;
+  char old_key = '\0';
 
   while(1) {
-    // gpio_set(gpio_portButton1, numButton1);
     // int button1_pressed = gpio_read(gpio_portButton1, numButton1) == 0;
     // printk("Button 1: %d \n", button1_pressed);
     // int button2_pressed = gpio_read(gpio_portButton2, numButton2) == 0;
     // printk("Button 2: %d \n", button2_pressed);
+    
+
     char key_read = keypad_read();
-    printk("Key pressed: %c \n", key_read);
-    //c = uart_polling_get_byte();
-    //uart_polling_put_byte(c);
+    if (key_read != old_key){
+      printk("%c", key_read);
+      old_key = key_read;
+    }
+    old_key = key_read;
+    
+    // c = uart_polling_get_byte();
+    // uart_polling_put_byte(c);
   }
 
   return 0;

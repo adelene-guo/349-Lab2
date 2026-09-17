@@ -170,9 +170,11 @@ char keypad_read( ){
        } else if (row_pressed == 4){
           key_pressed = '*';
        }
+       for (int i=0; i < 30000; i++);
+       return key_pressed;
     }
 
-    for (int i=0; i < 30000; i++);
+
 
     if (row_pressed_1 == 0){
         gpio_clr(gpio_portCOL1, numCOL1);
@@ -189,9 +191,10 @@ char keypad_read( ){
        } else if (row_pressed_1 == 4){
           key_pressed = '0';
        }
+        for (int i=0; i < 30000; i++);
+        return key_pressed;
     }
 
-    for (int i=0; i < 30000; i++);
     
     if (row_pressed_2 == 0){
         gpio_clr(gpio_portCOL1, numCOL1);
@@ -209,7 +212,6 @@ char keypad_read( ){
           key_pressed = '#';
        }
     }
-
     for (int i=0; i < 30000; i++);
     return key_pressed;
 }
