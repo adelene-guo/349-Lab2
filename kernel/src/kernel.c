@@ -13,6 +13,7 @@ int kernel_main() {
   uart_polling_init(USART_DIV);
   keypad_init();
 
+  //Initialize and set green and red LED gpio pins
   gpio_port gpio_portGreen = GPIO_A;
   unsigned int numGreen    = 8;
   unsigned int modeGreen   = MODE_GP_OUTPUT;
@@ -33,6 +34,7 @@ int kernel_main() {
   gpio_init(gpio_portRed, numRed, modeRed, otypeRed, speedRed, pupdRed, altRed);
   gpio_set(gpio_portRed, numRed);
 
+  //Initialize button gpio pins, internal pull-up since it's connected to ground
   gpio_port gpio_portButton1 = GPIO_A;
   unsigned int numButton1    = 9;
   unsigned int modeButton1   = MODE_INPUT;
@@ -55,12 +57,13 @@ int kernel_main() {
   char old_key = '\0';
 
   while(1) {
-    // int button1_pressed = gpio_read(gpio_portButton1, numButton1) == 0;
-    // printk("Button 1: %d \n", button1_pressed);
-    // int button2_pressed = gpio_read(gpio_portButton2, numButton2) == 0;
-    // printk("Button 2: %d \n", button2_pressed);
+    //Print out Button 1 and Button 2
+    int button1_pressed = gpio_read(gpio_portButton1, numButton1) == 0;
+    printk("Button 1: %d \n", button1_pressed);
+    int button2_pressed = gpio_read(gpio_portButton2, numButton2) == 0;
+    printk("Button 2: %d \n", button2_pressed);
     
-
+    //Print out key once when pressed
     char key_read = keypad_read();
     if (key_read != old_key){
       printk("%c", key_read);

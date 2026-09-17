@@ -26,7 +26,7 @@
 #define KEYPAD_ROW4_PIN 4
 
 void keypad_init() {
-    // Column 1
+    // Column 1 GPIO pin
     gpio_port gpio_portCOL1 = KEYPAD_COL1_PORT;
     unsigned int numCOL1     = KEYPAD_COL1_PIN;
     unsigned int modeCOL1    = MODE_GP_OUTPUT;
@@ -36,7 +36,7 @@ void keypad_init() {
     unsigned int altCOL1     = 0;
     gpio_init(gpio_portCOL1, numCOL1, modeCOL1, otypeCOL1, speedCOL1, pupdCOL1, altCOL1);
 
-    // Column 2
+    // Column 2 GPIO pin
     gpio_port gpio_portCOL2 = KEYPAD_COL2_PORT;
     unsigned int numCOL2     = KEYPAD_COL2_PIN;
     unsigned int modeCOL2    = MODE_GP_OUTPUT;
@@ -46,7 +46,7 @@ void keypad_init() {
     unsigned int altCOL2     = 0;
     gpio_init(gpio_portCOL2, numCOL2, modeCOL2, otypeCOL2, speedCOL2, pupdCOL2, altCOL2);
 
-    // Column 3
+    // Column 3 GPIO pin
     gpio_port gpio_portCOL3 = KEYPAD_COL3_PORT;
     unsigned int numCOL3     = KEYPAD_COL3_PIN;
     unsigned int modeCOL3    = MODE_GP_OUTPUT;
@@ -56,7 +56,7 @@ void keypad_init() {
     unsigned int altCOL3     = 0;
     gpio_init(gpio_portCOL3, numCOL3, modeCOL3, otypeCOL3, speedCOL3, pupdCOL3, altCOL3);
 
-    // Row 1
+    // Row 1 GPIO pin, internal pull-down since the column is setting the pressed key high
     gpio_port gpio_portROW1 = KEYPAD_ROW1_PORT;
     unsigned int numROW1     = KEYPAD_ROW1_PIN;
     unsigned int modeROW1    = MODE_INPUT;
@@ -66,7 +66,7 @@ void keypad_init() {
     unsigned int altROW1     = 0;
     gpio_init(gpio_portROW1, numROW1, modeROW1, otypeROW1, speedROW1, pupdROW1, altROW1);
 
-    // Row 2
+    // Row 2 GPIO pin
     gpio_port gpio_portROW2 = KEYPAD_ROW2_PORT;
     unsigned int numROW2     = KEYPAD_ROW2_PIN;
     unsigned int modeROW2    = MODE_INPUT;
@@ -76,7 +76,7 @@ void keypad_init() {
     unsigned int altROW2     = 0;
     gpio_init(gpio_portROW2, numROW2, modeROW2, otypeROW2, speedROW2, pupdROW2, altROW2);
 
-    // Row 3
+    // Row 3 GPIO pin
     gpio_port gpio_portROW3 = KEYPAD_ROW3_PORT;
     unsigned int numROW3     = KEYPAD_ROW3_PIN;
     unsigned int modeROW3    = MODE_INPUT;
@@ -86,7 +86,7 @@ void keypad_init() {
     unsigned int altROW3     = 0;
     gpio_init(gpio_portROW3, numROW3, modeROW3, otypeROW3, speedROW3, pupdROW3, altROW3);
 
-    // Row 4
+    // Row 4 GPIO pin
     gpio_port gpio_portROW4 = KEYPAD_ROW4_PORT;
     unsigned int numROW4     = KEYPAD_ROW4_PIN;
     unsigned int modeROW4    = MODE_INPUT;
@@ -99,6 +99,8 @@ void keypad_init() {
     return;
 }
 
+//Reads every row GPIO pin and checks if it is high, then returns row number
+//that the pressed key is in. Debounce after every read
 int read_row() {
     gpio_port gpio_portROW1 = KEYPAD_ROW1_PORT;
     unsigned int numROW1     = KEYPAD_ROW1_PIN;
@@ -133,6 +135,8 @@ int read_row() {
     return row_pressed;
 }
 
+//Sets each column one by one and then checks all the rows
+//for the exact pressed key. Debounce after every read row
 char keypad_read( ){
     gpio_port gpio_portCOL1 = KEYPAD_COL1_PORT;
     unsigned int numCOL1     = KEYPAD_COL1_PIN;
