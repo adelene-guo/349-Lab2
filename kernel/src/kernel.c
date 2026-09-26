@@ -1,4 +1,5 @@
 #include <gpio.h>
+#include <adc.h>
 #include <i2c.h>
 #include <printk.h>
 #include <uart_polling.h>
@@ -12,6 +13,7 @@
 int kernel_main() {
   uart_polling_init(USART_DIV);
   keypad_init();
+  adc_init();
 
   //Initialize and set green and red LED gpio pins
   gpio_port gpio_portGreen = GPIO_A;
@@ -57,11 +59,14 @@ int kernel_main() {
   char old_key = '\0';
 
   while(1) {
+    //Read light sensor value
+    uint16_t light_sensor = adc_read_chan(5);
+    if (light_sensor>=880) printk("Light Sensor: %d \n", light_sensor);
     //Print out Button 1 and Button 2
     int button1_pressed = gpio_read(gpio_portButton1, numButton1) == 0;
-    printk("Button 1: %d \n", button1_pressed);
+    if (button1_pressed) printk("Button 1: %d \n", button1_pressed);
     int button2_pressed = gpio_read(gpio_portButton2, numButton2) == 0;
-    printk("Button 2: %d \n", button2_pressed);
+    if (button2_pressed) printk("Button 2: %d \n", button2_pressed);
     
     //Print out key once when pressed
     char key_read = keypad_read();
