@@ -54,20 +54,21 @@ void lcd_driver_init() {
 }
 
 void lcd_print(char *input){
-    (void) input;
     char i2c_write_buf[4];
+    int i = 0;
+    while (input[i] != '\0'){
+        //Upper half with E = 1
+        i2c_write_buf[0] = (input[i] >> 4) << 4 | 0b1101;
+        //Upper half with E = 0
+        i2c_write_buf[1] = (input[i] >> 4) << 4 | 0b1001;
+        //Lower half with E = 1
+        i2c_write_buf[2] = (input[i] & 0x0F) << 4 | 0b1101;
+        //Lower half with E = 0
+        i2c_write_buf[3] = (input[i] & 0x0F) << 4 | 0b1001;
 
-    //Upper half with E = 1
-    i2c_write_buf[0] = (input >> 4) << 4 | 0b1101;
-    //Upper half with E = 0
-    i2c_write_buf[1] = (input >> 4) << 4 | 0b1001;
-    //Lower half with E = 1
-    i2c_write_buf[2] = (input & 0x0F) << 4 | 0b1101;
-    //Lower half with E = 0
-    i2c_write_buf[3] = (input & 0x0F) << 4 | 0b1001;
-
-    i2c_master_write(i2c_write_buf, 4, LCD_ADDR);
-
+        i2c_master_write(i2c_write_buf, 4, LCD_ADDR);
+        i += 1;
+    }
     return;
 }
 
