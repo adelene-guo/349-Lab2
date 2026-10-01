@@ -11,7 +11,7 @@
 
 void lcd_driver_init() {
     i2c_master_init(SCL_FREQ);
-    char i2c_init_buf[16];
+    uint8_t i2c_init_buf[16];
 
     //Upper half with E = 1
     i2c_init_buf[0] = 0b0011 << 4 | 0b1100;
@@ -54,7 +54,7 @@ void lcd_driver_init() {
 }
 
 void lcd_print(char *input){
-    char i2c_write_buf[4];
+    uint8_t i2c_write_buf[4];
     int i = 0;
     while (input[i] != '\0'){
         //Upper half with E = 1
@@ -76,7 +76,7 @@ void lcd_set_cursor(uint8_t row, uint8_t col){
     (void) row;
     (void) col;
     uint8_t ddram_addr = row * 64 + col;
-    char i2c_cursor_buf[4];
+    uint8_t i2c_cursor_buf[4];
 
     //Upper half with E = 1
     i2c_cursor_buf[0] = (ddram_addr >> 4) << 4 | 0b1100;
@@ -93,7 +93,7 @@ void lcd_set_cursor(uint8_t row, uint8_t col){
 }
 
 void lcd_clear() {
-    uint8_t *clear_buf[4];
+    uint8_t clear_buf[4];
 
     //Upper half with E = 1
     clear_buf[0] = 0b0000 << 4 | 0b1100;

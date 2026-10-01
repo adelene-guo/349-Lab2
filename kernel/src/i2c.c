@@ -12,19 +12,22 @@
 #define I2C1_BASE  (struct i2c_reg_map *) 0x40005400
 
 /** @brief */
-#define I2C_PE (1 << 0)
+#define I2C_PE 1
+
+/** @brief */
+#define I2C_BUSY (1 << 1)
 
 /** @brief Peripheral Clock Frequency - 16MHz */
-#define I2C_FREQ 0x10
+#define I2C_FREQ 16
 
 /** @brief Bit 14 of I2C_OAR1 must always be set to 1 */
 #define I2C_OAR1_SET (1 << 14)
 
 /** @brief  */
 /** T_rise = (max/T_PCLK1) 
-           = 1000ns / (1/16Mhz)
-           = 16 = 0x10*/
-#define I2C_TRISE_VAL 0x10 
+           = 1000ns / (1/16Mhz) + 
+           = 17 = 0x11*/
+#define I2C_TRISE_VAL 0x11 
 
 
 
@@ -33,6 +36,9 @@
 
 /** @brief */
 #define I2C_STOP (1 << 9)
+
+/** @brief */
+#define I2C_ACK (1 << 10)
 
 /** @brief */
 #define I2C_SB (1 << 0)
@@ -93,15 +99,16 @@ void i2c_master_init(uint16_t clk){
     struct i2c_reg_map *i2c = I2C1_BASE;
     i2c->I2C_CR2 |= I2C_FREQ;
     i2c->I2C_CCR |= clk; 
-    i2c->I2C_OAR1 |= I2C_OAR1_SET; // bit 14 of OAR1 must be 1
-    i2c->I2C_TRISE = I2C_TRISE_VAL;
     i2c->I2C_CR1 |= I2C_PE; // enables peripheral
+    i2c->I2C_CR1 |= I2C_ACK;
 
     return;
 }
 
 void i2c_master_start() {
     struct i2c_reg_map *i2c = I2C1_BASE;
+    while ((i2c->I2C_SR2 & I2C_BUSY));
+
     i2c->I2C_CR1 |= I2C_START;
     while (!(i2c->I2C_SR1 & I2C_SB)); // EV5 wait while SB is not asserted
     return;

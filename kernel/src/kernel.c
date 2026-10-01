@@ -10,10 +10,20 @@
 /** @brief USARTDIV value */
 #define USART_DIV 0x8B
 
+/** @brief CCR value for a 100 kHz SCL frequency */
+#define SCL_FREQ 80
+
 int kernel_main() {
   uart_polling_init(USART_DIV);
   keypad_init();
   adc_init();
+  i2c_master_init(SCL_FREQ);
+
+  while(1) {
+    uint8_t buffer[1];
+    buffer[0] = 0b0001;
+    i2c_master_write(buffer, 1, 0x00);
+  }
 
   //Initialize and set green and red LED gpio pins
   gpio_port gpio_portGreen = GPIO_A;
@@ -61,7 +71,7 @@ int kernel_main() {
   while(1) {
     //Read light sensor value
     uint16_t light_sensor = adc_read_chan(5);
-    if (light_sensor>=880) printk("Light Sensor: %d \n", light_sensor);
+    printk("Light Sensor: %d \n", light_sensor);
     //Print out Button 1 and Button 2
     int button1_pressed = gpio_read(gpio_portButton1, numButton1) == 0;
     if (button1_pressed) printk("Button 1: %d \n", button1_pressed);
