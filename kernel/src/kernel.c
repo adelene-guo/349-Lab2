@@ -18,12 +18,22 @@ int kernel_main() {
   keypad_init();
   adc_init();
   i2c_master_init(SCL_FREQ);
-
-  while(1) {
-    uint8_t buffer[1];
-    buffer[0] = 0b0001;
-    i2c_master_write(buffer, 1, 67);
+  lcd_driver_init();
+  lcd_clear();
+  for (int i=0; i<100; i++){
   }
+  uint8_t row = 1;
+  uint8_t col = 10;
+  lcd_set_cursor(row, col);
+  char* input = "hello\0";
+  lcd_print(input);
+
+
+  // while(1) {
+  //   uint8_t buffer[1];
+  //   buffer[0] = 0b0001;
+  //   i2c_master_write(buffer, 1, 67);
+  // }
 
   //Initialize and set green and red LED gpio pins
   gpio_port gpio_portGreen = GPIO_A;
