@@ -20,11 +20,13 @@ int kernel_main() {
   i2c_master_init(SCL_FREQ);
   lcd_driver_init();
   lcd_clear();
-  for (int i=0; i<100; i++){
+  for (int i=0; i<10000; i++){
   }
   uint8_t row = 1;
-  uint8_t col = 10;
+  uint8_t col = 0;
   lcd_set_cursor(row, col);
+  for (int i=0; i<10000; i++){
+  }
   char* input = "hello\0";
   lcd_print(input);
 
