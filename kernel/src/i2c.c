@@ -99,6 +99,7 @@ void i2c_master_init(uint16_t clk){
     struct i2c_reg_map *i2c = I2C1_BASE;
     i2c->I2C_CR2 |= I2C_FREQ;
     i2c->I2C_CCR |= clk; 
+    i2c->I2C_TRISE = I2C_TRISE_VAL;
     i2c->I2C_CR1 |= I2C_PE; // enables peripheral
     i2c->I2C_CR1 |= I2C_ACK;
 
@@ -107,8 +108,7 @@ void i2c_master_init(uint16_t clk){
 
 void i2c_master_start() {
     struct i2c_reg_map *i2c = I2C1_BASE;
-    while ((i2c->I2C_SR2 & I2C_BUSY));
-
+    while (i2c->I2C_SR2 & I2C_BUSY);
     i2c->I2C_CR1 |= I2C_START;
     while (!(i2c->I2C_SR1 & I2C_SB)); // EV5 wait while SB is not asserted
     return;

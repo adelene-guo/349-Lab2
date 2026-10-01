@@ -22,7 +22,7 @@ int kernel_main() {
   while(1) {
     uint8_t buffer[1];
     buffer[0] = 0b0001;
-    i2c_master_write(buffer, 1, 0x00);
+    i2c_master_write(buffer, 1, 67);
   }
 
   //Initialize and set green and red LED gpio pins

@@ -7,7 +7,7 @@
 #define LCD_ADDR 78 >> 1
 
 /** @brief CCR value for a 100 kHz SCL frequency */
-#define SCL_FREQ 40
+#define SCL_FREQ 80
 
 void lcd_driver_init() {
     i2c_master_init(SCL_FREQ);
