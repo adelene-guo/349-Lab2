@@ -22,12 +22,12 @@ int kernel_main() {
   lcd_clear();
   for (int i=0; i<10000; i++){
   }
-  uint8_t row = 1;
-  uint8_t col = 0;
+  uint8_t row = 0;
+  uint8_t col = 7;
   lcd_set_cursor(row, col);
   for (int i=0; i<10000; i++){
   }
-  char* input = "hello\0";
+  char* input = "h\0";
   lcd_print(input);
 
 

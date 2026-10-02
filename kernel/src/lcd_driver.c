@@ -75,13 +75,13 @@ void lcd_print(char *input){
 void lcd_set_cursor(uint8_t row, uint8_t col){
     (void) row;
     (void) col;
-    uint8_t ddram_addr = row * 64 + col;
+    uint8_t ddram_addr = row * 64 + col + 128;
     uint8_t i2c_cursor_buf[4];
 
     //Upper half with E = 1
-    i2c_cursor_buf[0] = (ddram_addr >> 4) << 4 | 0b1100;
+    i2c_cursor_buf[0] = (ddram_addr & 0xF0) | 0b1100;
     //Upper half with E = 0
-    i2c_cursor_buf[1] = (ddram_addr >> 4) << 4 | 0b1000;
+    i2c_cursor_buf[1] = (ddram_addr & 0xF0)| 0b1000;
     //Lower half with E = 1
     i2c_cursor_buf[2] = (ddram_addr & 0x0F) << 4 | 0b1100;
     //Lower half with E = 0
