@@ -1,5 +1,15 @@
-#include <unistd.h>
+/**
+ * @file lcd_driver.c
+ *
+ * @brief
+ * This file contains the implementation of the LCD driver for the STM32F4 microcontroller.
+ * It provides functions to initialize the LCD and display text.
+ * @date 10/3/2026
+ *
+ * @author Adie and Alexis
+ */
 
+#include <unistd.h>
 #include <i2c.h>
 #include <lcd_driver.h>
 
@@ -12,6 +22,7 @@
 /** @brief CCR value for a 100 kHz SCL frequency */
 #define SCL_FREQ 80
 
+/** @brief Initialize the LCD driver by sending startup commands */
 void lcd_driver_init() {
     i2c_master_init(SCL_FREQ);
     uint8_t i2c_init_buf[16];
@@ -56,6 +67,7 @@ void lcd_driver_init() {
 	return;
 }
 
+/** @brief Print text on the LCD */
 void lcd_print(char *input){
     uint8_t i2c_write_buf[4];
     int i = 0;
@@ -75,9 +87,10 @@ void lcd_print(char *input){
     return;
 }
 
+/** @brief Set the cursor position or the DDRAM address on the LCD */
 void lcd_set_cursor(uint8_t row, uint8_t col){
     uint8_t ddram_addr = row * 64 + col;
-    ddram_addr |= DDRAM_OFFSET;
+    ddram_addr |= DDRAM_OFFSET; //Bit 7 is set to 1 to indicate DDRAM address
     uint8_t i2c_cursor_buf[4];
 
     //Upper half with E = 1
@@ -94,6 +107,7 @@ void lcd_set_cursor(uint8_t row, uint8_t col){
     return;
 }
 
+/** @brief Clear the LCD display */
 void lcd_clear() {
     uint8_t clear_buf[4];
 

@@ -2,10 +2,11 @@
  * @file adc.c
  *
  * @brief
+ * This file contains the implementation of the ADC driver for the STM32F4 microcontroller.
+ * It provides functions to initialize the ADC and read values from specific channels.
+ * @date 10/3/2026
  *
- * @date
- *
- * @author
+ * @author Adie and Alexis
  */
 
 #include <gpio.h>
@@ -66,6 +67,7 @@ struct adc_reg_map {
 /** @brief Data mask for DR */
 #define DATA 0b1111111111111111
 
+/** @brief Initialize the ADC pin */
 void adc_init() {
 
 	struct rcc_reg_map *rcc = RCC_BASE;
@@ -87,6 +89,8 @@ void adc_init() {
 	return;
 }
 
+
+/** @brief Read the value from a specific ADC channel */
 uint16_t adc_read_chan(uint8_t chan){
     (void)chan;
 	struct adc_reg_map *adc = ADC_BASE;
