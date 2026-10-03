@@ -1,3 +1,17 @@
+/**
+ * @file kernel.c
+ *
+ * @brief
+ * This file contains the main kernel code that initializes UART, the keypad, 
+ * ADC, I2C, LCD on the connected arudino STM32. Creates an interactive system 
+ * that takes input from the keypad and displays it on the LCD screen and 
+ * outputs the values from the light sensor into minicom.
+ * @date 10/3/2026
+ *
+ * @author Alexis and Adie
+ */
+
+
 #include <gpio.h>
 #include <adc.h>
 #include <i2c.h>
@@ -13,11 +27,13 @@
 /** @brief CCR value for a 100 kHz SCL frequency */
 #define SCL_FREQ 80
 
+/** @brief Main body of kernel code that initializes systems and implements
+    keypad and minicom displays */
 int kernel_main() {
   uart_polling_init(USART_DIV);
   keypad_init();
   adc_init();
-  i2c_master_init(SCL_FREQ); // do we need this bc lcd driver also calls it
+  i2c_master_init(SCL_FREQ);
   lcd_driver_init();
   
   lcd_clear();
@@ -30,6 +46,7 @@ int kernel_main() {
     // read light sensor value
     uint16_t light_sensor = adc_read_chan(5);
     printk("Light Sensor Value: %d \n", light_sensor);
+
     // echo keypad presses to the LCD
     char key_read = keypad_read();
 
@@ -50,21 +67,8 @@ int kernel_main() {
         lcd_print(key_print);
       }
     old_key = key_read;
-
-
     }
   }
-
-  // lcd_set_cursor(row, col);
-  // char* input = "hello\0";
-  // lcd_print(input);
-
-
-  // while(1) {
-  //   uint8_t buffer[1];
-  //   buffer[0] = 0b0001;
-  //   i2c_master_write(buffer, 1, 67);
-  // }
 
   //Initialize and set green and red LED gpio pins
   gpio_port gpio_portGreen = GPIO_A;
@@ -87,6 +91,7 @@ int kernel_main() {
   gpio_init(gpio_portRed, numRed, modeRed, otypeRed, speedRed, pupdRed, altRed);
   gpio_set(gpio_portRed, numRed);
 
+
   //Initialize button gpio pins, internal pull-up since it's connected to ground
   gpio_port gpio_portButton1 = GPIO_A;
   unsigned int numButton1    = 9;
@@ -105,31 +110,6 @@ int kernel_main() {
   unsigned int pupdButton2   = PUPD_PULL_UP;
   unsigned int altButton2    = ALT0;  
   gpio_init(gpio_portButton2, numButton2, modeButton2, otypeButton2, speedButton2, pupdButton2, altButton2);
-
-  // //char c;
-  // char old_key = '\0';
-
-  // while(1) {
-  //   //Read light sensor value
-  //   uint16_t light_sensor = adc_read_chan(5);
-  //   printk("Light Sensor Value: %d \n", light_sensor);
-  //   //Print out Button 1 and Button 2
-  //   int button1_pressed = gpio_read(gpio_portButton1, numButton1) == 0;
-  //   if (button1_pressed) printk("Button 1: %d \n", button1_pressed);
-  //   int button2_pressed = gpio_read(gpio_portButton2, numButton2) == 0;
-  //   if (button2_pressed) printk("Button 2: %d \n", button2_pressed);
-    
-  //   //Print out key once when pressed
-  //   char key_read = keypad_read();
-  //   if (key_read != old_key){
-  //     printk("%c", key_read);
-  //     old_key = key_read;
-  //   }
-  //   old_key = key_read;
-    
-  //   // c = uart_polling_get_byte();
-  //   // uart_polling_put_byte(c);
-  // }
 
   return 0;
 }
