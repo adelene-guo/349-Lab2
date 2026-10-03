@@ -27,6 +27,9 @@ int kernel_main() {
 
   char old_key = '\0';
   while (1) {
+    // read light sensor value
+    uint16_t light_sensor = adc_read_chan(5);
+    printk("Light Sensor Value: %d \n", light_sensor);
     // echo keypad presses to the LCD
     char key_read = keypad_read();
 
@@ -44,14 +47,13 @@ int kernel_main() {
       }
       else {
         char key_print[2] = {key_read, '\0'};
-        lcd_print(&key_print);
+        lcd_print(key_print);
       }
     old_key = key_read;
 
-    // read light sensor value
-    uint16_t light_sensor = adc_read_chan(5);
-    printk("Light Sensor Value: %d\n", light_sensor);
+
     }
+  }
 
   // lcd_set_cursor(row, col);
   // char* input = "hello\0";

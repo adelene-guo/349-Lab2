@@ -6,6 +6,9 @@
 /** @brief Write address for PCF8574 */
 #define LCD_ADDR 78 >> 1
 
+/** @brief  */
+#define DDRAM_OFFSET 1 << 7
+
 /** @brief CCR value for a 100 kHz SCL frequency */
 #define SCL_FREQ 80
 
@@ -73,9 +76,8 @@ void lcd_print(char *input){
 }
 
 void lcd_set_cursor(uint8_t row, uint8_t col){
-    (void) row;
-    (void) col;
-    uint8_t ddram_addr = row * 64 + col + 128;
+    uint8_t ddram_addr = row * 64 + col;
+    ddram_addr |= DDRAM_OFFSET;
     uint8_t i2c_cursor_buf[4];
 
     //Upper half with E = 1
