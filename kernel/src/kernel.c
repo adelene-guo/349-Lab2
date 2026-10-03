@@ -17,18 +17,45 @@ int kernel_main() {
   uart_polling_init(USART_DIV);
   keypad_init();
   adc_init();
-  i2c_master_init(SCL_FREQ);
+  i2c_master_init(SCL_FREQ); // do we need this bc lcd driver also calls it
   lcd_driver_init();
+  
   lcd_clear();
-  for (int i=0; i<10000; i++){
-  }
-  uint8_t row = 0;
-  uint8_t col = 7;
-  lcd_set_cursor(row, col);
-  for (int i=0; i<10000; i++){
-  }
-  char* input = "h\0";
-  lcd_print(input);
+  for (int i=0; i<100; i++){} // wait after clear
+  uint8_t lcd_row = 0;
+  uint8_t lcd_col = 0;
+
+  char old_key = '\0';
+  while (1) {
+    // echo keypad presses to the LCD
+    char key_read = keypad_read();
+
+    if (key_read != old_key) {
+      if (key_read == '*') {
+        lcd_row = (lcd_row+1) % 2;
+        lcd_set_cursor(lcd_row, lcd_col);
+      }
+      else if (key_read == '#') {
+        lcd_clear();
+        for (int i=0; i<100; i++){} // wait after clear
+        lcd_row = 0;
+        lcd_col = 0;
+        lcd_set_cursor(lcd_row, lcd_col);
+      }
+      else {
+        char key_print[2] = {key_read, '\0'};
+        lcd_print(&key_print);
+      }
+    old_key = key_read;
+
+    // read light sensor value
+    uint16_t light_sensor = adc_read_chan(5);
+    printk("Light Sensor Value: %d\n", light_sensor);
+    }
+
+  // lcd_set_cursor(row, col);
+  // char* input = "hello\0";
+  // lcd_print(input);
 
 
   // while(1) {
@@ -77,30 +104,30 @@ int kernel_main() {
   unsigned int altButton2    = ALT0;  
   gpio_init(gpio_portButton2, numButton2, modeButton2, otypeButton2, speedButton2, pupdButton2, altButton2);
 
-  //char c;
-  char old_key = '\0';
+  // //char c;
+  // char old_key = '\0';
 
-  while(1) {
-    //Read light sensor value
-    uint16_t light_sensor = adc_read_chan(5);
-    printk("Light Sensor: %d \n", light_sensor);
-    //Print out Button 1 and Button 2
-    int button1_pressed = gpio_read(gpio_portButton1, numButton1) == 0;
-    if (button1_pressed) printk("Button 1: %d \n", button1_pressed);
-    int button2_pressed = gpio_read(gpio_portButton2, numButton2) == 0;
-    if (button2_pressed) printk("Button 2: %d \n", button2_pressed);
+  // while(1) {
+  //   //Read light sensor value
+  //   uint16_t light_sensor = adc_read_chan(5);
+  //   printk("Light Sensor Value: %d \n", light_sensor);
+  //   //Print out Button 1 and Button 2
+  //   int button1_pressed = gpio_read(gpio_portButton1, numButton1) == 0;
+  //   if (button1_pressed) printk("Button 1: %d \n", button1_pressed);
+  //   int button2_pressed = gpio_read(gpio_portButton2, numButton2) == 0;
+  //   if (button2_pressed) printk("Button 2: %d \n", button2_pressed);
     
-    //Print out key once when pressed
-    char key_read = keypad_read();
-    if (key_read != old_key){
-      printk("%c", key_read);
-      old_key = key_read;
-    }
-    old_key = key_read;
+  //   //Print out key once when pressed
+  //   char key_read = keypad_read();
+  //   if (key_read != old_key){
+  //     printk("%c", key_read);
+  //     old_key = key_read;
+  //   }
+  //   old_key = key_read;
     
-    // c = uart_polling_get_byte();
-    // uart_polling_put_byte(c);
-  }
+  //   // c = uart_polling_get_byte();
+  //   // uart_polling_put_byte(c);
+  // }
 
   return 0;
 }
